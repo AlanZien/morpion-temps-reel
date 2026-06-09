@@ -35,13 +35,13 @@ class TicTacToeGame {
       symbol,
       winner,
       isDraw,
-      board: this.board,
+      board: [...this.board],
     };
   }
 
   getState() {
     return {
-      board: this.board,
+      board: [...this.board],
       currentTurn: this.currentTurn,
     };
   }

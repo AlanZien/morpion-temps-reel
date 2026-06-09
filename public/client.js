@@ -58,8 +58,14 @@ function highlightWinner(winner, board) {
 
 function startSearch() {
   resetBoard();
+  findGameBtn.hidden = true;
   socket.emit('find-game');
   setStatus('Recherche d\'un adversaire...');
+}
+
+function endGame() {
+  findGameBtn.hidden = false;
+  replayBtn.hidden = false;
 }
 
 findGameBtn.addEventListener('click', startSearch);
@@ -68,9 +74,17 @@ replayBtn.addEventListener('click', startSearch);
 cells.forEach((cell) => {
   cell.addEventListener('click', () => {
     if (!myTurn || cell.textContent || !myRoomId) return;
+    myTurn = false;
+    cell.disabled = true;
     const index = parseInt(cell.dataset.index, 10);
     socket.emit('make-move', index);
   });
+});
+
+socket.on('connect', () => {
+  resetBoard();
+  findGameBtn.hidden = false;
+  setStatus('Cliquez sur Trouver une partie pour commencer');
 });
 
 socket.on('waiting', () => {
@@ -78,6 +92,7 @@ socket.on('waiting', () => {
 });
 
 socket.on('game-start', ({ symbol, roomId }) => {
+  resetBoard();
   mySymbol = symbol;
   myRoomId = roomId;
   myTurn = symbol === 'X';
@@ -92,14 +107,14 @@ socket.on('move-made', ({ symbol, winner, isDraw, board }) => {
     highlightWinner(winner, board);
     setStatus(winner === mySymbol ? 'Vous avez gagné !' : 'Vous avez perdu.');
     enableBoard(false);
-    replayBtn.hidden = false;
+    endGame();
     return;
   }
 
   if (isDraw) {
     setStatus('Match nul !');
     enableBoard(false);
-    replayBtn.hidden = false;
+    endGame();
     return;
   }
 
@@ -110,7 +125,8 @@ socket.on('move-made', ({ symbol, winner, isDraw, board }) => {
 });
 
 socket.on('opponent-left', () => {
+  myTurn = false;
   setStatus('Adversaire déconnecté.');
   enableBoard(false);
-  replayBtn.hidden = false;
+  endGame();
 });

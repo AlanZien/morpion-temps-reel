@@ -6,6 +6,8 @@ const activeRooms = new Map();
 const socketRoom = new Map();
 
 function addToQueue(socket, io) {
+  if (queue.includes(socket) || socketRoom.has(socket.id)) return;
+
   if (queue.length > 0) {
     const opponent = queue.shift();
 
