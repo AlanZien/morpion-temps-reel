@@ -1,3 +1,8 @@
+:root {
+  --cell: clamp(80px, 26vw, 100px);
+  --gap: clamp(4px, 1.5vw, 6px);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -10,23 +15,27 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 24px;
+  gap: 20px;
   background: #1a1a2e;
   color: #e0e0e0;
   font-family: 'Segoe UI', sans-serif;
+  padding: 16px;
 }
 
 h1 {
-  font-size: 2.5rem;
+  font-size: clamp(1.8rem, 6vw, 2.5rem);
   letter-spacing: 0.1em;
   color: #ffffff;
 }
 
 #status {
-  font-size: 1.1rem;
+  font-size: clamp(0.9rem, 3vw, 1.1rem);
   color: #a0a0b0;
   min-height: 1.5em;
+  text-align: center;
 }
+
+/* --- Bouton Trouver une partie --- */
 
 #find-game {
   padding: 12px 32px;
@@ -37,35 +46,101 @@ h1 {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
+  transition: background 0.2s, transform 0.1s, opacity 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
 }
 
-#find-game:hover {
+#find-game:hover:not(:disabled) {
   background: #4338ca;
   transform: translateY(-1px);
 }
 
-#find-game:active {
+#find-game:active:not(:disabled) {
   transform: translateY(0);
 }
 
+#find-game:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+#find-game.loading::after {
+  content: '';
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* --- Indicateur de tour --- */
+
+#players {
+  display: flex;
+  gap: 16px;
+}
+
+.player {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  background: #16213e;
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+}
+
+.player-symbol {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+#player-x .player-symbol { color: #60a5fa; }
+#player-o .player-symbol { color: #f87171; }
+
+.player.active {
+  transform: scale(1.1);
+}
+
+#player-x.active {
+  border-color: #60a5fa;
+  box-shadow: 0 0 14px #60a5fa60;
+}
+
+#player-o.active {
+  border-color: #f87171;
+  box-shadow: 0 0 14px #f8717160;
+}
+
+/* --- Plateau --- */
+
 #board {
   display: grid;
-  grid-template-columns: repeat(3, 100px);
-  grid-template-rows: repeat(3, 100px);
-  gap: 6px;
+  grid-template-columns: repeat(3, var(--cell));
+  grid-template-rows: repeat(3, var(--cell));
+  gap: var(--gap);
 }
 
 .cell {
-  width: 100px;
-  height: 100px;
+  width: var(--cell);
+  height: var(--cell);
   background: #16213e;
   border: 2px solid #2d2d5e;
   border-radius: 8px;
-  font-size: 2.5rem;
+  font-size: clamp(1.8rem, 7vw, 2.5rem);
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.15s, transform 0.15s;
+  transition: background 0.15s;
   color: inherit;
 }
 
@@ -79,18 +154,31 @@ h1 {
 
 .cell.x {
   color: #60a5fa;
-  animation: pop 0.15s ease-out;
+  animation: pop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .cell.o {
   color: #f87171;
-  animation: pop 0.15s ease-out;
+  animation: pop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @keyframes pop {
-  0%   { transform: scale(0.7); }
-  100% { transform: scale(1); }
+  0%   { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
 }
+
+.cell.winner {
+  background: #1e3a5f;
+  border-color: #facc15;
+  animation: glow 1.2s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 10px #facc1560; }
+  50%       { box-shadow: 0 0 22px #facc15b0; }
+}
+
+/* --- Bouton Rejouer --- */
 
 #replay {
   padding: 10px 28px;
@@ -108,8 +196,10 @@ h1 {
   background: #0d6460;
 }
 
-.cell.winner {
-  background: #1e3a5f;
-  border-color: #facc15;
-  box-shadow: 0 0 12px #facc1580;
+/* --- Mobile --- */
+
+@media (max-width: 360px) {
+  body { gap: 14px; }
+  #players { gap: 10px; }
+  .player { width: 44px; height: 44px; }
 }
