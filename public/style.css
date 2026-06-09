@@ -107,3 +107,9 @@ h1 {
 #replay:hover {
   background: #0d6460;
 }
+
+.cell.winner {
+  background: #1e3a5f;
+  border-color: #facc15;
+  box-shadow: 0 0 12px #facc1580;
+}
