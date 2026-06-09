@@ -3,16 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <title>Morpion</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <p id="status">Connecté…</p>
+  <h1>Morpion</h1>
+
+  <p id="status">Cliquez sur Trouver une partie pour commencer</p>
+
+  <button id="find-game">Trouver une partie</button>
+
+  <div id="board">
+    <button class="cell" data-index="0"></button>
+    <button class="cell" data-index="1"></button>
+    <button class="cell" data-index="2"></button>
+    <button class="cell" data-index="3"></button>
+    <button class="cell" data-index="4"></button>
+    <button class="cell" data-index="5"></button>
+    <button class="cell" data-index="6"></button>
+    <button class="cell" data-index="7"></button>
+    <button class="cell" data-index="8"></button>
+  </div>
+
+  <button id="replay" hidden>Rejouer</button>
 
   <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
-    socket.on('connect', () => {
-      document.getElementById('status').textContent = 'Connecté !';
-    });
-  </script>
+  <script src="client.js"></script>
 </body>
 </html>
