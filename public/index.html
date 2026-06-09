@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Morpion</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -11,6 +12,15 @@
   <p id="status">Cliquez sur Trouver une partie pour commencer</p>
 
   <button id="find-game">Trouver une partie</button>
+
+  <div id="players" hidden>
+    <div class="player" id="player-x">
+      <span class="player-symbol">X</span>
+    </div>
+    <div class="player" id="player-o">
+      <span class="player-symbol">O</span>
+    </div>
+  </div>
 
   <div id="board">
     <button class="cell" data-index="0"></button>
