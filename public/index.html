@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Morpion</title>
+</head>
+<body>
+  <p id="status">Connecté…</p>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    socket.on('connect', () => {
+      document.getElementById('status').textContent = 'Connecté !';
+    });
+  </script>
+</body>
+</html>
