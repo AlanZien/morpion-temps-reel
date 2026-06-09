@@ -18,6 +18,8 @@ io.on('connection', (socket) => {
   });
 
   socket.on('make-move', (cellIndex) => {
+    if (!Number.isInteger(cellIndex) || cellIndex < 0 || cellIndex > 8) return;
+
     const roomId = socketRoom.get(socket.id);
     if (!roomId) return;
 
